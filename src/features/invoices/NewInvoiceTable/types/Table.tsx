@@ -4,15 +4,15 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { Service } from "@/features/invoices/DetailsTable/types/Service";
-import { services } from "@/features/invoices/DetailsTable/data/services";
-import tableColumns from "@/features/invoices/DetailsTable/tableColumns";
-import TopToolbarCustomActions from "@/features/invoices/DetailsTable/TopToolbarCustomActions";
-import ToolbarInternalActions from "@/features/invoices/DetailsTable/ToolbarInternalActions";
-import BottomToolbarCustomActions from "@/features/invoices/DetailsTable/BottomToolbarCustomActions";
+import { Service } from "@/features/invoices/NewInvoiceTable/types/Service";
+import { services } from "@/features/invoices/NewInvoiceTable/data/services";
+import tableColumns from "@/features/invoices/NewInvoiceTable/tableColumns";
+import TopToolbarCustomActions from "@/features/invoices/NewInvoiceTable/TopToolbarCustomActions";
+import ToolbarInternalActions from "@/features/invoices/NewInvoiceTable/ToolbarInternalActions";
+import BottomToolbarCustomActions from "@/features/invoices/NewInvoiceTable/BottomToolbarCustomActions";
 
 const initialData: Service[] = services;
-const DetailsTable = () => {
+const NewInvoiceTable = () => {
   const columns = tableColumns();
   const [data, setData] = useState<Service[]>(initialData);
   const table = useMaterialReactTable({
@@ -31,21 +31,13 @@ const DetailsTable = () => {
     // Aquí puedes agregar más acciones en la parte inferior de la tabla
     renderBottomToolbarCustomActions: ({ table }) => <BottomToolbarCustomActions table={table} />,
 
-
-    muiTableHeadCellProps: {
-      sx: {
-        backgroundColor: "surfaceContainerHighest.main",
-      },
-    },
-
     muiPaginationProps: {
       rowsPerPageOptions: [1, 2, 5, 10, 25, 50, 100],
     },
-
     paginationDisplayMode: "pages",
   });
 
   return <MaterialReactTable table={table}/>;
 };
 
-export default DetailsTable;
+export default NewInvoiceTable;

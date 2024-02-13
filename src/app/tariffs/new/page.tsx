@@ -11,11 +11,15 @@ import { useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
-import Table from '@/components/Table/Table';
+import NewInvoiceTable from '@/features/invoices/NewInvoiceTable/Table';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import customerList from './customerList.json'
+import { Customer } from '@/features/invoices/types/customer';
+import IconButton from '@mui/material/IconButton';
+import dayjs from 'dayjs';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -24,13 +28,31 @@ const NewInvoices = () => {
 
   const [customer, setCustomer] = useState('');
   const [resolution, setResolution] = useState('');
+  const [customerDetails, setCustomerDetails] = useState<Customer | null>(null);
+  const [editCustomerDetails, setEditCustomerDetails] = useState(false);
+  const [editFacturation, setEditFacturation] = useState(false);
+  const [date, setDate] = useState(dayjs().format('DD MMM YYYY'));
+  const [dueDate, setDueDate] = useState(dayjs().add(1, 'month').format('DD MMM YYYY'));
 
   const handleCustomer = (event: SelectChangeEvent) => {
-    setResolution(event.target.value as string);
+    const customerId = Number(event.target.value);
+    setCustomer(customerId.toString());
+    const selectedCustomer = customerList.find((customer) => customer.id === customerId);
+    if (selectedCustomer) {
+      setCustomerDetails(selectedCustomer);
+    }
   };
 
+  const editCustomerInfo = () => {
+    setEditCustomerDetails(!editCustomerDetails);
+  }
+
+  const editFacturationAddress = () => {
+    setEditFacturation(!editFacturation);
+  }
+
   const handleResolution = (event: SelectChangeEvent) => {
-    setCustomer(event.target.value as string);
+    setResolution(event.target.value as string);
   };
 
   return (
@@ -55,19 +77,19 @@ const NewInvoices = () => {
           <Box sx={{ display: 'flex', gap: '2em', mt: '1em', mb: '2em' }}>
             <p style={{}}>Customer</p>
             {/* Select Customer */}
-            <Box sx={{ minWidth: 180, display: 'flex', alignItems: 'center' }} >
+            <Box sx={{ minWidth: 360, display: 'flex', alignItems: 'center' }} >
               <FormControl fullWidth size="small">
-                <InputLabel id="demo-simple-select-label">Select Customer</InputLabel>
+                <InputLabel id="customer">Select Customer</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+                  labelId="customer"
+                  id="customer"
                   value={customer}
-                  label="Age"
+                  label="Select Customer"
                   onChange={handleCustomer}
                 >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  {customerList.map((customer) => (
+                    <MenuItem key={customer.id} value={customer.id}>{customer.customer.CustomerDetails.name}</MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -77,21 +99,176 @@ const NewInvoices = () => {
               <p style={{}}>Send</p>
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', gap: '5em' }}>
-            <Box sx={{ fontSize: '80%', '& p': { margin: '0.30em', color: '#827379' } }}>
-              <p style={{ color: 'black', }}><b>Customer Details<span><EditIcon color="primary" fontSize="small" sx={{ ml: '0.25em' }} /></span></b></p>
-              <p>Medilaboral Salud y Seguridad Laboral</p>
-              <p>NIT 4-9008367263</p>
-              <p>+57 3014072140</p>
-              <p>contabilidad@medilaboral.com</p>
-              <p>Calle 100 # 52 -20</p>
-              <p>Bogotá, Colombia</p>
+          <Box sx={{ display: 'flex', gap: '2em' }}>
+            <Box sx={{ minWidth: '21em', minHeight: '13.5em', fontSize: '80%', '& p': { margin: '0.30em', color: '#827379' } }}>
+              <p style={{ color: 'black', }}><b>Customer Details
+                <span>
+                  <IconButton
+                    sx={{ width: '0', height: '0', ml: '0.5em' }}
+                    onClick={editCustomerInfo} // It supposed to be eventually a POST request to the server
+                  >
+                    <EditIcon color="primary" fontSize="small" sx={{ ml: '0.25em' }} />
+                  </IconButton>
+                </span></b></p>
+              {customerDetails && editCustomerDetails === false && (
+                <>
+                  <p>{customerDetails.customer.CustomerDetails.name}</p>
+                  <p>{customerDetails.customer.CustomerDetails.NIT}</p>
+                  <p>{customerDetails.customer.CustomerDetails.phone}</p>
+                  <p>{customerDetails.customer.CustomerDetails.email}</p>
+                  <p>{customerDetails.customer.CustomerDetails.address}</p>
+                  <p>{customerDetails.customer.CustomerDetails.Location}</p>
+                </>
+              )}
+              {customerDetails && editCustomerDetails && (
+                <Box sx={{ display: 'flex', flexDirection: 'column' }} >
+                  <TextField
+                    onChange={
+                      (event) => {
+                        if (customerDetails) {
+                          customerDetails.customer.CustomerDetails.name = event.target.value;
+                        }
+                      }
+                    }
+                    hiddenLabel
+                    InputProps={{
+                      style: { fontSize: 12 }, // change font size here
+                    }}
+                    variant="standard"
+                    // sx={{ width: '100%', }}
+                    defaultValue={customerDetails?.customer.CustomerDetails.name}
+                    size='small' id="name" />
+                  <TextField
+                    onChange={
+                      (event) => {
+                        if (customerDetails) {
+                          customerDetails.customer.CustomerDetails.NIT = event.target.value;
+                        }
+                      }
+                    }
+                    hiddenLabel
+                    InputProps={{
+                      style: { fontSize: 12 }, // change font size here
+                    }}
+                    variant="standard"
+                    defaultValue={customerDetails?.customer.CustomerDetails.NIT}
+                    size='small' id="NIT" />
+                  <TextField
+                    onChange={
+                      (event) => {
+                        if (customerDetails) {
+                          customerDetails.customer.CustomerDetails.phone = event.target.value;
+                        }
+                      }
+                    }
+                    hiddenLabel
+                    InputProps={{
+                      style: { fontSize: 12 }, // change font size here
+                    }}
+                    variant="standard"
+                    defaultValue={customerDetails?.customer.CustomerDetails.phone}
+                    size='small' id="phone" />
+                  <TextField
+                    onChange={
+                      (event) => {
+                        if (customerDetails) {
+                          customerDetails.customer.CustomerDetails.email = event.target.value;
+                        }
+                      }
+                    }
+                    hiddenLabel
+                    InputProps={{
+                      style: { fontSize: 12 }, // change font size here
+                    }}
+                    variant="standard"
+                    defaultValue={customerDetails?.customer.CustomerDetails.email}
+                    size='small' id="email" />
+                  <TextField
+                    onChange={
+                      (event) => {
+                        if (customerDetails) {
+                          customerDetails.customer.CustomerDetails.address = event.target.value;
+                        }
+                      }
+                    }
+                    hiddenLabel
+                    InputProps={{
+                      style: { fontSize: 12 }, // change font size here
+                    }}
+                    variant="standard"
+                    defaultValue={customerDetails?.customer.CustomerDetails.address}
+                    size='small' id="address" />
+                  <TextField
+                    onChange={
+                      (event) => {
+                        if (customerDetails) {
+                          customerDetails.customer.CustomerDetails.Location = event.target.value;
+                        }
+                      }
+                    }
+                    hiddenLabel
+                    InputProps={{
+                      style: { fontSize: 12 }, // change font size here
+                    }}
+                    variant="standard"
+                    defaultValue={customerDetails?.customer.CustomerDetails.Location}
+                    size='small' id="location" />
+                </Box>
+              )}
             </Box>
             <Box>
               <Box sx={{ fontSize: '80%', '& p': { margin: 0, color: '#827379' } }}>
-                <p style={{ color: 'black', }}><b>Facturation Address </b><span><EditIcon color="primary" fontSize="small" sx={{ ml: '0.25em' }} /></span></p>
-                <p>Calle 100 #52-20</p>
-                <p>Bogotá, Colombia</p>
+                <p style={{ color: 'black', paddingTop: '0.2em' }}><b>Facturation Address </b><span>
+                  <IconButton
+                    // sx={{ width: '0', height: '0'}} 
+                    onClick={editFacturationAddress}
+                  >
+                    <EditIcon color="primary" fontSize="small" sx={{ ml: '0.25em' }} />
+                  </IconButton>
+                </span></p>
+                {customerDetails && editFacturation === false && (
+                  <>
+                    <p>{customerDetails?.customer.FacturationAddress.address}</p>
+                    <p>{customerDetails?.customer.FacturationAddress.location}</p>
+                  </>
+                )}
+                {customerDetails && editFacturation && (
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <TextField
+                      onChange={
+                        (event) => {
+                          if (customerDetails) {
+                            customerDetails.customer.FacturationAddress.address = event.target.value;
+                          }
+                        }
+                      }
+                      hiddenLabel
+                      InputProps={{
+                        style: { fontSize: 12 }, // change font size here
+                      }}
+                      variant="standard"
+                      sx={{ width: '10em', }}
+                      defaultValue={customerDetails?.customer.FacturationAddress.address}
+                      size='small' id="facturationAddress" />
+                    <TextField
+                      onChange={
+                        (event) => {
+                          if (customerDetails) {
+                            customerDetails.customer.FacturationAddress.location = event.target.value;
+                          }
+                        }
+                      }
+                      hiddenLabel
+                      variant="standard"
+                      sx={{ width: '10em' }}
+                      InputProps={{
+                        style: { fontSize: 12 }, // change font size here
+                      }}
+                      defaultValue={customerDetails?.customer.FacturationAddress.location}
+                      size='small' id="facturationLocation" />
+                  </Box>
+                )}
+
               </Box>
             </Box>
           </Box>
@@ -104,16 +281,16 @@ const NewInvoices = () => {
           </Box>
           <Box sx={{ display: 'flex', padding: '2em', pb: '0', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel htmlFor="date" sx={{ display: 'flex', alignItems: 'center' }}>Date</InputLabel>
-            <TextField size='small' id="date" label="07 Mar 2022" />
+            <TextField hiddenLabel size='small' id="date" value={date} />
             <CalendarMonthOutlinedIcon color="primary" sx={{ ml: '0.25em', alignSelf: 'center' }} />
           </Box>
           <Box sx={{ display: 'flex', padding: '2em', pb: '0', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel htmlFor="duedate" sx={{ display: 'flex', alignItems: 'center' }}>Due Date</InputLabel>
-            <TextField size='small' id="duedate" label="31 Mar 2022" />
+            <TextField hiddenLabel size='small' id="duedate" value={dueDate} />
             <CalendarMonthOutlinedIcon color="primary" sx={{ ml: '0.25em', alignSelf: 'center' }} />
           </Box>
           <Box sx={{ display: 'flex', padding: '2em', pb: '0', gap: '1em', justifyContent: 'flex-end' }}>
-            <InputLabel htmlFor="duedate" sx={{ display: 'flex', alignItems: 'center' }}>Resolution</InputLabel>
+            <InputLabel htmlFor="resolution" sx={{ display: 'flex', alignItems: 'center' }}>Resolution</InputLabel>
             {/* Select Customer */}
             <Box sx={{ minWidth: 223, }}>
               <FormControl fullWidth size="small">
@@ -122,7 +299,7 @@ const NewInvoices = () => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={resolution}
-                  label="Resolution"
+                  label="Select Resolution"
                   onChange={handleResolution}
                 >
                   <MenuItem value={10}>Ten</MenuItem>
@@ -138,7 +315,7 @@ const NewInvoices = () => {
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: '2em' }}>
         <Box sx={{ width: '100%' }}>
-          <Table />
+          <NewInvoiceTable />
         </Box>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1em' }}>
@@ -155,21 +332,31 @@ const NewInvoices = () => {
         <Box sx={{}}>
           <Box sx={{ display: 'flex', pb: '0', pt: '1em', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel sx={{ display: 'flex', alignItems: 'center', fontSize: '0.95em' }}>Sub Total</InputLabel>
-            <TextField disabled id="filled-basic" label="$1,628" variant="filled" size="small" sx={{ color: 'primary', backgroundColor: 'primary', width: '50%', '& input': {fontSize: '0.4em'}, '& label': {
-      marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
-    } }} />
+            <TextField disabled id="filled-basic" hiddenLabel variant="filled" size="small" sx={{
+              color: 'primary', backgroundColor: 'primary', width: '35%', '& input': { fontSize: '1em' }, '& label': {
+                marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
+              }
+            }} />
           </Box>
           <Box sx={{ display: 'flex', pb: '0', pt: '1em', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel sx={{ display: 'flex', alignItems: 'center', fontSize: '0.95em' }}>Tax</InputLabel>
-            <TextField disabled id="filled-basic" label="2.85%" variant="filled" size="small" sx={{  backgroundColor: `${theme.schemes.light.surfaceContainer}`, width: '50%', '& input': {fontSize: '0.4em'}, '& label': {
-      marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
-    } }} />
+            <TextField disabled id="filled-basic"
+              // *100 to an undefined value is not possible, so it's been checked
+              value={customerDetails?.customer.TaxRetention !== undefined ? (`${customerDetails?.customer.TaxRetention * 100}$`) : (customerDetails?.customer.TaxRetention)}
+              hiddenLabel variant="filled" size="small"
+              sx={{
+                backgroundColor: `${theme.schemes.light.surfaceContainer}`, width: '35%', '& input': { fontSize: '1em' }, '& label': {
+                  opacity: '0.8'
+                }
+              }} />
           </Box>
           <Box sx={{ display: 'flex', pb: '0', pt: '1em', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel sx={{ display: 'flex', alignItems: 'center', fontSize: '0.95em' }}>Total</InputLabel>
-            <TextField disabled id="filled-basic" label="$1,581.6" variant="filled" size="small" sx={{ color: 'primary', backgroundColor: 'primary', width: '50%', '& input': {fontSize:'0.4em'}, '& label': {
-      marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
-    } }} />
+            <TextField disabled id="filled-basic" hiddenLabel variant="filled" size="small" sx={{
+              color: 'primary', backgroundColor: 'primary', width: '35%', '& input': { fontSize: '0.4em' }, '& label': {
+                marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
+              }
+            }} />
           </Box>
         </Box>
       </Box>

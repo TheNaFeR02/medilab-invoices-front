@@ -1,18 +1,18 @@
 "use client";
-import {useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { Service } from "@/features/invoices/DetailsTable/types/Service";
-import { services } from "@/features/invoices/DetailsTable/data/services";
-import tableColumns from "@/features/invoices/DetailsTable/tableColumns";
-import TopToolbarCustomActions from "@/features/invoices/DetailsTable/TopToolbarCustomActions";
-import ToolbarInternalActions from "@/features/invoices/DetailsTable/ToolbarInternalActions";
-import BottomToolbarCustomActions from "@/features/invoices/DetailsTable/BottomToolbarCustomActions";
+import { Service } from "./types/Service";
+import { services } from "./data/services";
+import tableColumns from "./tableColumns";
+import TopToolbarCustomActions from "./TopToolbarCustomActions";
+import ToolbarInternalActions from "./ToolbarInternalActions";
+import BottomToolbarCustomActions from "./BottomToolbarCustomActions";
 
 const initialData: Service[] = services;
-const DetailsTable = () => {
+const NewInvoiceTable = () => {
   const columns = tableColumns();
   const [data, setData] = useState<Service[]>(initialData);
   const table = useMaterialReactTable({
@@ -23,14 +23,13 @@ const DetailsTable = () => {
     enableSorting: false,
     enableRowActions: false,
     enableSelectAll: false,
-    
+
     renderTopToolbarCustomActions: () => <TopToolbarCustomActions />,
 
     renderToolbarInternalActions: ({ table }) => <ToolbarInternalActions table={table} />,
 
     // Aquí puedes agregar más acciones en la parte inferior de la tabla
     renderBottomToolbarCustomActions: ({ table }) => <BottomToolbarCustomActions table={table} />,
-
 
     muiTableHeadCellProps: {
       sx: {
@@ -41,11 +40,10 @@ const DetailsTable = () => {
     muiPaginationProps: {
       rowsPerPageOptions: [1, 2, 5, 10, 25, 50, 100],
     },
-
     paginationDisplayMode: "pages",
   });
 
-  return <MaterialReactTable table={table}/>;
+  return <MaterialReactTable table={table} />;
 };
 
-export default DetailsTable;
+export default NewInvoiceTable;

@@ -4,11 +4,14 @@ import { Box, Container } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { Grid } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { Padding } from '@mui/icons-material';
-import Table from '@/components/Table/Table';
+import InvoicesTable from '@/features/invoices/InvoicesTable/Table';
+import { sumInvoices } from '@/app/tariffs/summary';
+import { useState } from 'react';
 
 
 const Tariffs = () => {
+  const [filterStatus, setFilterStatus] = useState('');
+
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -22,30 +25,44 @@ const Tariffs = () => {
             <Grid item xs={12} lg={6} sx={{ height: '100%' }}>
 
               <PieChart
-
                 slotProps={{
                   legend: {
                     direction: 'row',
                     position: { vertical: 'top', horizontal: 'right' },
-                    // padding: 300,
-                    // padding: 60,
-                    padding: { left: 300, right: 0, top: 50 },
-                    // padding: { top: 10, bottom: 20, left: 30, right: 40 },
+                    padding: { left: 240, right: 0, top: 50 },
                     itemMarkHeight: 20,
                     itemMarkWidth: 20,
                     itemGap: 30,
-                    labelStyle: {},
+                    labelStyle: { fontFamily: 'inherit', fontStyle: 'normal', fontWeight: '500', fontSize: 14 },
 
                   },
                 }}
-                height={300} width={500}
+                height={300} width={540}
+                onClick={(data, pieItemIdentifier) => {
+                  switch (pieItemIdentifier.dataIndex) {
+                    case 0:
+                      setFilterStatus('All');
+                      break;
+                    case 1:
+                      setFilterStatus('Overdue');
+                      break;
+                    case 2:
+                      setFilterStatus('Pending');
+                      break;
+                    case 3:
+                      setFilterStatus('Paid');
+                      break;
+                    default:
+                      break;
+                  }
+                }}
                 series={[
                   {
                     data: [
-                      { id: 0, value: 10, label: 'series A' },
-                      { id: 1, value: 15, label: 'series B' },
-                      { id: 2, value: 20, label: 'series C' },
-                      { id: 3, value: 30, label: 'series D' },
+                      { id: 0, value: sumInvoices.all, label: `$${sumInvoices.all}\n All Total      `, color: 'lightblue' },
+                      { id: 1, value: sumInvoices.overdue, label: `$${sumInvoices.overdue}\n Total Overdue`, color: 'salmon' },
+                      { id: 2, value: sumInvoices.pending, label: `$${sumInvoices.pending}\n Total Pending`, color: 'lime' },
+                      { id: 3, value: sumInvoices.paid, label: `$${sumInvoices.paid}\n Total Paid`, color: 'khaki' },
                     ],
                     innerRadius: 40,
                     outerRadius: 70,
@@ -55,25 +72,37 @@ const Tariffs = () => {
                     endAngle: 180,
                     cx: 120,
                     cy: 90,
+
                   }]
                 }
               />
 
             </Grid>
             <Grid item xs={12} lg={6}>
-              <BarChart
+              {/* <BarChart
                 xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
                 series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
                 width={500}
                 height={200}
-              />
+              /> */}
+              {/* <BarChart
+                dataset={dataset}
+                xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+                series={[
+                  { dataKey: 'london', label: 'London', valueFormatter },
+                  { dataKey: 'paris', label: 'Paris', valueFormatter },
+                  { dataKey: 'newYork', label: 'New York', valueFormatter },
+                  { dataKey: 'seoul', label: 'Seoul', valueFormatter },
+                ]}
+                {...chartSetting}
+              /> */}
             </Grid>
           </Grid>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', }}>
-          <Box sx={{ width: '100%' }}> 
-            <Table />
+          <Box sx={{ width: '100%' }}>
+            <InvoicesTable filterStatus={filterStatus} />
           </Box>
         </Box>
       </Box >

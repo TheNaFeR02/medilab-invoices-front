@@ -1,13 +1,10 @@
-'use client' // delete when changed the useTheme
 import { Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { useTheme } from '@mui/material/styles';
 import DetailsTable from '@/features/invoices/DetailsTable/Table';
 
 const InvoiceDetails = () => {
-  const theme = useTheme()
   return (
     <>
       <Box sx={{ mb: '1.5em' }}>
@@ -139,7 +136,7 @@ const InvoiceDetails = () => {
               <Box sx={{
                 boxSizing: 'border-box',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', height: '70%', justifyContent: 'space-evenly',
-                '& button': { backgroundColor: 'transparent', textTransform: 'none', color: `${theme.palette.primary.main}`, },
+                '& button': { backgroundColor: 'transparent', textTransform: 'none', color: "primary.main", },
                 '& p': { color: '#827379' },
               }}>
                 <Box sx={{ width: '80%', display: 'flex', alignItems: 'center', flexDirection: 'column', gap: '1px' }}>

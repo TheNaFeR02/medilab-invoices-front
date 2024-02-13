@@ -1,14 +1,11 @@
 
-'use client' // delete when changed the useTheme
 import { Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { useTheme } from '@mui/material/styles';
 import DetailsTable from '@/features/invoices/DetailsTable/Table';
 
 const InvoiceDetailsCustomer = () => {
-  const theme = useTheme()
   return (
     <>
       <Box sx={{ mb: '1.5em' }}>
@@ -116,7 +113,7 @@ const InvoiceDetailsCustomer = () => {
                 </Box>
                 <Box sx={{ width: '80%', display: 'flex', alignItems: 'center', flexDirection: 'column', gap: '1px' }}>
                   <Button fullWidth variant='outlined' sx={{
-                    backgroundColor: 'transparent', textTransform: 'none', color: `${theme.palette.primary.main}`,
+                    backgroundColor: 'transparent', textTransform: 'none', color: "primary.main",
                     mb: '0', borderColor: '#827379', fontWeight: '600'
                   }}>View as PDF</Button>
                   <p style={{ margin: '0', alignSelf: 'self-start', width: '80%', fontSize: '0.9em', }}>View the PDF invoice senty to your costumer</p>
