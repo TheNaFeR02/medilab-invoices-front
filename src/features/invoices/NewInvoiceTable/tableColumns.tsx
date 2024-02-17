@@ -1,13 +1,13 @@
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
-import { Service } from "./types/Service";
+import { Service, Patient } from "../../../repository/local/invoices/invoices_new/type/Service";
 import { Chip } from "@mui/material";
 
 
 //should be memoized or stable
 
 export default function tableColumns() {
-  const columns = useMemo<MRT_ColumnDef<Service>[]>(
+  const columns = useMemo<MRT_ColumnDef<Patient>[]>(
     () => [
       {
         accessorKey: "Service", //access nested data with dot notation

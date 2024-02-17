@@ -1,11 +1,11 @@
-
 import { Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import Grid from '@mui/material/Grid';
+import { Grid } from '@mui/material';
 import Button from '@mui/material/Button';
 import DetailsTable from '@/features/invoices/DetailsTable/Table';
+import { FC } from 'react';
 
-const InvoiceDetailsCustomer = () => {
+const InvoiceDetailsCustomer: FC = () => {
   return (
     <>
       <Box sx={{ mb: '1.5em' }}>
@@ -15,7 +15,6 @@ const InvoiceDetailsCustomer = () => {
       <Grid container spacing={6}> {/* display: 'flex', justifyContent: 'space-between', */}
         <Grid item xs={8.5}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1.5em', flexWrap: 'wrap' }}>
-
             <Box sx={{ display: 'flex', gap: '2em' }}>
               <Box sx={{ fontSize: '100%', '& p': { margin: '0.30em', color: '#827379' } }}>
                 <p style={{ color: 'black', }}><b>Customer Details<span><EditIcon color="primary" fontSize="small" sx={{ ml: '0.25em' }} /></span></b></p>
@@ -63,7 +62,7 @@ const InvoiceDetailsCustomer = () => {
 
           </Box>
           <Box sx={{ width: '100%', mb: '4em' }}>
-            <Box sx={{ width: '100%', border:'1px solid black', borderRadius: '4px' }}>
+            <Box sx={{ width: '100%', border: '1px solid black', borderRadius: '4px' }}>
               <DetailsTable />
             </Box>
           </Box>

@@ -16,8 +16,10 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import customerList from './customerList.json'
+// import customerList from './customerList.json'
+import { customers as customerList } from '@/repository/local/invoices/invoices_new/data/customers';
 import { Customer } from '@/features/invoices/types/customer';
+import { services } from '@/repository/local/invoices/invoices_new/data/services';
 import IconButton from '@mui/material/IconButton';
 import dayjs from 'dayjs';
 
@@ -28,11 +30,34 @@ const NewInvoices = () => {
 
   const [customer, setCustomer] = useState('');
   const [resolution, setResolution] = useState('');
-  const [customerDetails, setCustomerDetails] = useState<Customer | null>(null);
+  const [customerDetails, setCustomerDetails] = useState<Customer>({
+    id: 0,
+    customer: {
+      CustomerDetails: {
+        name: '',
+        NIT: '',
+        phone: '',
+        email: '',
+        address: '',
+        Location: ''
+      },
+      FacturationAddress: {
+        address: '',
+        location: ''
+      },
+      TaxRetention: 0
+    }
+  });
+
   const [editCustomerDetails, setEditCustomerDetails] = useState(false);
   const [editFacturation, setEditFacturation] = useState(false);
   const [date, setDate] = useState(dayjs().format('DD MMM YYYY'));
   const [dueDate, setDueDate] = useState(dayjs().add(1, 'month').format('DD MMM YYYY'));
+  const [subtotal, setSubtotal] = useState(0);
+  
+  
+  
+  
 
   const handleCustomer = (event: SelectChangeEvent) => {
     const customerId = Number(event.target.value);
@@ -40,6 +65,14 @@ const NewInvoices = () => {
     const selectedCustomer = customerList.find((customer) => customer.id === customerId);
     if (selectedCustomer) {
       setCustomerDetails(selectedCustomer);
+
+      const customerServices = services.find(
+        (service) => service.customerId === Number(customerId)
+      );
+      if (customerServices) {
+        const subtotal = customerServices.patients.reduce((acc, patient) => acc + patient.PendingAmount, 0);
+        setSubtotal(subtotal);
+      }
     }
   };
 
@@ -315,7 +348,7 @@ const NewInvoices = () => {
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: '2em' }}>
         <Box sx={{ width: '100%' }}>
-          <NewInvoiceTable />
+          <NewInvoiceTable customerId={customer} />
         </Box>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1em' }}>
@@ -332,17 +365,19 @@ const NewInvoices = () => {
         <Box sx={{}}>
           <Box sx={{ display: 'flex', pb: '0', pt: '1em', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel sx={{ display: 'flex', alignItems: 'center', fontSize: '0.95em' }}>Sub Total</InputLabel>
-            <TextField disabled id="filled-basic" hiddenLabel variant="filled" size="small" sx={{
-              color: 'primary', backgroundColor: 'primary', width: '35%', '& input': { fontSize: '1em' }, '& label': {
-                marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
-              }
-            }} />
+            <TextField disabled id="filled-basic" hiddenLabel variant="filled" size="small"
+              value={subtotal}
+              sx={{
+                color: 'primary', backgroundColor: 'primary', width: '35%', '& input': { fontSize: '1em' }, '& label': {
+                  marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
+                }
+              }} />
           </Box>
           <Box sx={{ display: 'flex', pb: '0', pt: '1em', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel sx={{ display: 'flex', alignItems: 'center', fontSize: '0.95em' }}>Tax</InputLabel>
             <TextField disabled id="filled-basic"
               // *100 to an undefined value is not possible, so it's been checked
-              value={customerDetails?.customer.TaxRetention !== undefined ? (`${customerDetails?.customer.TaxRetention * 100}$`) : (customerDetails?.customer.TaxRetention)}
+              value={customerDetails?.customer.TaxRetention !== undefined ? (`${customerDetails?.customer.TaxRetention * 100}%`) : (customerDetails?.customer.TaxRetention)}
               hiddenLabel variant="filled" size="small"
               sx={{
                 backgroundColor: `${theme.schemes.light.surfaceContainer}`, width: '35%', '& input': { fontSize: '1em' }, '& label': {
@@ -352,11 +387,13 @@ const NewInvoices = () => {
           </Box>
           <Box sx={{ display: 'flex', pb: '0', pt: '1em', gap: '1em', justifyContent: 'flex-end' }}>
             <InputLabel sx={{ display: 'flex', alignItems: 'center', fontSize: '0.95em' }}>Total</InputLabel>
-            <TextField disabled id="filled-basic" hiddenLabel variant="filled" size="small" sx={{
-              color: 'primary', backgroundColor: 'primary', width: '35%', '& input': { fontSize: '0.4em' }, '& label': {
-                marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
-              }
-            }} />
+            <TextField disabled id="filled-basic" hiddenLabel variant="filled" size="small"
+              value={subtotal - (subtotal * customerDetails?.customer.TaxRetention)}
+              sx={{
+                color: 'primary', backgroundColor: 'primary', width: '35%', '& input': { fontSize: '1em' }, '& label': {
+                  marginTop: '-0.5em', marginLeft: '0.2em', opacity: '0.8'
+                }
+              }} />
           </Box>
         </Box>
       </Box>

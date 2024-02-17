@@ -5,7 +5,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { Grid } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import InvoicesTable from '@/features/invoices/InvoicesTable/Table';
-import { sumInvoices } from '@/app/tariffs/summary';
+import { sumInvoices } from '@/repository/local/invoices/invoices_summary/data/summary';
 import { useState } from 'react';
 
 
@@ -19,7 +19,7 @@ const Tariffs = () => {
           <h1 style={{ margin: 0 }}>Invoices</h1>
           <p style={{ margin: 0 }}>View all the information related to the company invoices</p>
         </Box>
-        <Box sx={{ width: '100%', height: { xs: 'auto', lg: '12em' }, backgroundColor: 'rgba(211, 211, 211, 0.5)', borderRadius: '10px', mb: '2em' }}>
+        <Box sx={{ width: '100%', height: { xs: 'auto', lg: '12em' }, backgroundColor: "background.main", borderRadius: '10px', mb: '2em', boxShadow: 1 }}>
           <Grid container spacing={2} >
 
             <Grid item xs={12} lg={6} sx={{ height: '100%' }}>
@@ -34,7 +34,6 @@ const Tariffs = () => {
                     itemMarkWidth: 20,
                     itemGap: 30,
                     labelStyle: { fontFamily: 'inherit', fontStyle: 'normal', fontWeight: '500', fontSize: 14 },
-
                   },
                 }}
                 height={300} width={540}

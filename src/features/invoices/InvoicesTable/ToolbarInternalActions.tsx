@@ -8,7 +8,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { invoices } from './data/invoices'
+import { invoices } from '../../../repository/local/invoices/invoices_list/data/invoices'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import isEmail from 'validator/lib/isEmail';
@@ -21,7 +21,7 @@ import {
   Download as DownloadIcon,
   BorderClear,
 } from "@mui/icons-material";
-import { Invoice } from "./types/Invoice";
+import { Invoice } from "../../../repository/local/invoices/invoices_list/types/Invoice";
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { Resend } from 'resend';
 import { EmailTemplate } from "../components/email-template";

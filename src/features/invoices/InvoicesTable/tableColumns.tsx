@@ -1,6 +1,6 @@
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
-import { Invoice } from "./types/Invoice";
+import { Invoice } from "../../../repository/local/invoices/invoices_list/types/Invoice";
 import { Chip } from "@mui/material";
 
 

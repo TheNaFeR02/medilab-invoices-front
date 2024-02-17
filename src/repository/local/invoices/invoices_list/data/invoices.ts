@@ -1,4 +1,4 @@
-import { Status } from "../types/Status";
+import { Status } from "../../../../../features/invoices/InvoicesTable/types/Status";
 
 export const invoices = [
   {
@@ -20,19 +20,19 @@ export const invoices = [
   }, {
     Number: "INV1578932",
     Date: "31 Dic 2022",
-    Customers: "Medilaboral / Construcciones Bolivar",
+    Customers: "Shalem Janna Uninorte",
     TotalAmount: 150000,
     DueDate: new Date("2024-01-07"),
     Status: Status.Overdue,
-    Email: '',
+    Email: 'jannas@uninorte.edu.co',
   }, {
     Number: "INV1578932",
     Date: "31 Dic 2022",
-    Customers: "Medilaboral / Construcciones Bolivar",
+    Customers: "Shalem Janna Gmail",
     TotalAmount: 150000,
     DueDate: new Date("2024-01-08"),
     Status: Status.Pending,
-    Email: '',
+    Email: 'sjanna10@gmail.com',
   }, {
     Number: "INV1578932",
     Date: "31 Dic 2022",

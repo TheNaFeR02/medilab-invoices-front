@@ -19,7 +19,7 @@
     "export-to-csv": "^1.2.2",
     "json-server": "^1.0.0-alpha.23",
     "material-react-table": "^2.6.1",
-    "next": "14.0.4",
+    "next": "^14.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-email": "2.0.0",

@@ -1,20 +1,40 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { Service } from "./types/Service";
-import { services } from "./data/services";
+import { Services, Patient } from "../../../repository/local/invoices/invoices_new/type/Service";
+import { services } from "../../../repository/local/invoices/invoices_new/data/services";
 import tableColumns from "./tableColumns";
 import TopToolbarCustomActions from "./TopToolbarCustomActions";
 import ToolbarInternalActions from "./ToolbarInternalActions";
 import BottomToolbarCustomActions from "./BottomToolbarCustomActions";
 
-const initialData: Service[] = services;
-const NewInvoiceTable = () => {
+type Props = {
+  customerId: string;
+};
+
+const initialData: Patient[] = [];
+const NewInvoiceTable = ({ customerId }: Props) => {
+
   const columns = tableColumns();
-  const [data, setData] = useState<Service[]>(initialData);
+  const [data, setData] = useState<Patient[]>(initialData);
+
+
+  useEffect(() => {
+    const customerServices = services.find(
+      (service) => service.customerId === Number(customerId)
+    );
+    console.log(customerServices);
+    if (customerServices) {
+      setData(customerServices.patients);
+    } else {
+      setData([]);
+    }
+  }, [customerId])
+
+
   const table = useMaterialReactTable({
     columns,
     data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)

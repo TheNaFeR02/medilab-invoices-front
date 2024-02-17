@@ -1,4 +1,4 @@
-import { Status } from "../types/Status";
+import { Status } from "../../../../../features/invoices/InvoicesTable/types/Status"
 
 export type Invoice = {
   Number: string;

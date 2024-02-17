@@ -4,8 +4,8 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { Invoice } from "./types/Invoice";
-import { invoices } from "./data/invoices";
+import { Invoice } from "../../../repository/local/invoices/invoices_list/types/Invoice";
+import { invoices } from "../../../repository/local/invoices/invoices_list/data/invoices";
 import tableColumns from "./tableColumns";
 import TopToolbarCustomActions from "./TopToolbarCustomActions";
 import ToolbarInternalActions from "./ToolbarInternalActions";
